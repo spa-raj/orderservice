@@ -1,6 +1,7 @@
 package com.vibevault.orderservice.configurations;
 
 import com.vibevault.orderservice.events.CartEvent;
+import com.vibevault.orderservice.events.PaymentEvent;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,27 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, CartEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(cartEventConsumerFactory);
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, PaymentEvent> paymentEventConsumerFactory(KafkaProperties kafkaProperties) {
+        Map<String, Object> config = kafkaProperties.buildConsumerProperties();
+        config.put(org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonJsonDeserializer.class);
+        config.put(JacksonJsonDeserializer.VALUE_DEFAULT_TYPE, PaymentEvent.class.getName());
+        config.put(JacksonJsonDeserializer.TRUSTED_PACKAGES, "com.vibevault.*");
+        config.put(JacksonJsonDeserializer.USE_TYPE_INFO_HEADERS, false);
+
+        return new DefaultKafkaConsumerFactory<>(config);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, PaymentEvent> paymentEventListenerContainerFactory(
+            ConsumerFactory<String, PaymentEvent> paymentEventConsumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, PaymentEvent> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(paymentEventConsumerFactory);
         return factory;
     }
 }
