@@ -2,7 +2,7 @@ CREATE TABLE orders (
     id               BINARY(16)     NOT NULL,
     created_at       DATETIME       NULL,
     last_modified_at DATETIME       NULL,
-    is_deleted       BIT(1)         NULL,
+    is_deleted       BIT(1)         NOT NULL DEFAULT 0,
     created_by       BINARY(16)     NULL,
     last_modified_by BINARY(16)     NULL,
     version          INT            NULL,
@@ -18,7 +18,7 @@ CREATE TABLE order_items (
     id               BINARY(16)     NOT NULL,
     created_at       DATETIME       NULL,
     last_modified_at DATETIME       NULL,
-    is_deleted       BIT(1)         NULL,
+    is_deleted       BIT(1)         NOT NULL DEFAULT 0,
     created_by       BINARY(16)     NULL,
     last_modified_by BINARY(16)     NULL,
     version          INT            NULL,
@@ -32,6 +32,6 @@ CREATE TABLE order_items (
     CONSTRAINT fk_order_items_order FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
-CREATE INDEX idx_order_user_status ON orders(user_id, status, created_at DESC);
-CREATE INDEX idx_order_cart_event ON orders(cart_event_id);
+CREATE INDEX idx_order_user ON orders(user_id, is_deleted, created_at DESC);
+CREATE UNIQUE INDEX idx_order_cart_event ON orders(cart_event_id);
 CREATE INDEX idx_order_items_order ON order_items(order_id);
