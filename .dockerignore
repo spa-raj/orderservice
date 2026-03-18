@@ -1,0 +1,39 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+*.iml
+.vscode
+
+# Build artifacts (built inside container, host artifacts not needed)
+target/
+
+# Documentation
+*.md
+README*
+
+# CI/CD
+.github
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.*.local
+
+# Tests (not needed in production image)
+src/test/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files (don't include in build context recursively)
+docker-compose*.yml
+Dockerfile*
