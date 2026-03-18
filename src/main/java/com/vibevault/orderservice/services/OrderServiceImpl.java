@@ -41,6 +41,10 @@ public class OrderServiceImpl implements OrderService {
                 .currency("INR")
                 .build();
 
+        if (event.getItems() == null || event.getItems().isEmpty()) {
+            throw new IllegalArgumentException("CHECKOUT_INITIATED event " + event.getEventId() + " has no items");
+        }
+
         BigDecimal total = BigDecimal.ZERO;
 
         for (CartItemEvent item : event.getItems()) {
@@ -99,6 +103,7 @@ public class OrderServiceImpl implements OrderService {
             log.info("Order {} already cancelled — no-op", orderId);
             return order;
         }
+        log.info("Cancelling order {} — reason: {}", orderId, reason);
         order.setStatus(OrderStatus.CANCELLED);
         return orderRepository.save(order);
     }
