@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID> {
-    Page<Order> findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(String userId, Pageable pageable);
+    Page<Order> findByUserIdAndDeletedFalseOrderByCreatedAtDesc(String userId, Pageable pageable);
 
     Optional<Order> findByCartEventId(String cartEventId);
 }
