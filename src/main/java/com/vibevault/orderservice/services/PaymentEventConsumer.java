@@ -24,6 +24,11 @@ public class PaymentEventConsumer {
     public void handlePaymentEvent(PaymentEvent event) {
         log.info("Processing payment event {} type {} for order {}", event.getEventId(), event.getEventType(), event.getOrderId());
 
+        if (event.getEventType() == null) {
+            log.warn("Payment event {} has null eventType — skipping", event.getEventId());
+            return;
+        }
+
         try {
             switch (event.getEventType()) {
                 case "PAYMENT_CONFIRMED" -> {
