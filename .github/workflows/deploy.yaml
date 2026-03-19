@@ -76,6 +76,14 @@ jobs:
       - name: Configure kubectl
         run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
+      - name: Get RDS address
+        id: params
+        run: |
+          RDS_ADDRESS=$(aws rds describe-db-instances \
+            --db-instance-identifier ${{ env.EKS_CLUSTER_NAME }}-mysql \
+            --query 'DBInstances[0].Endpoint.Address' --output text)
+          echo "rds_address=${RDS_ADDRESS}" >> "$GITHUB_OUTPUT"
+
       - name: Deploy with Helm
         run: |
           helm upgrade --install ${{ env.HELM_RELEASE }} ${{ env.HELM_CHART_PATH }} \
@@ -83,7 +91,7 @@ jobs:
             --set image.repository=${{ needs.build-and-push.outputs.image_repo }} \
             --set image.tag=${{ needs.build-and-push.outputs.image_tag }} \
             --set config.kafkaBootstrapServers="kafka:9092" \
-            --set-string config.dbUrl="${{ secrets.DB_URL }}" \
+            --set-string config.dbUrl="jdbc:mysql://${{ steps.params.outputs.rds_address }}:3306/orderservice?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC" \
             --wait --timeout 300s
 
       - name: Verify deployment
