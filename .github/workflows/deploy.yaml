@@ -83,7 +83,7 @@ jobs:
             --set image.repository=${{ needs.build-and-push.outputs.image_repo }} \
             --set image.tag=${{ needs.build-and-push.outputs.image_tag }} \
             --set config.kafkaBootstrapServers="kafka:9092" \
-            --set config.dbUrl="${{ secrets.DB_URL }}" \
+            --set-string config.dbUrl="${{ secrets.DB_URL }}" \
             --wait --timeout 300s
 
       - name: Verify deployment
