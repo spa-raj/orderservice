@@ -20,8 +20,8 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-# Install wget for health checks
-RUN apk add --no-cache wget
+# Install wget for health checks, unzip for Flyway init container
+RUN apk add --no-cache wget unzip
 
 # Create non-root user
 RUN addgroup -S spring && adduser -S spring -G spring
