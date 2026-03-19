@@ -46,7 +46,7 @@ public class ExceptionAdvices {
         ExceptionDto dto = new ExceptionDto(
                 status.toString(),
                 Encode.forHtml(message),
-                path,
+                Encode.forHtml(path),
                 errorCode,
                 LocalDateTime.now()
         );
