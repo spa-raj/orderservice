@@ -67,11 +67,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Order> getUserOrders(String userId, Pageable pageable) {
-        return orderRepository.findByUserIdAndDeletedFalseOrderByCreatedAtDesc(userId, pageable);
+        return orderRepository.findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(userId, pageable);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Order getOrderById(UUID orderId, String userId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
