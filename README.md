@@ -54,6 +54,17 @@ Cart checkout → CHECKOUT_INITIATED (cart-events)
 - Confirm/cancel operations are idempotent (already in target state → no-op)
 - `@EntityGraph` for eager item fetch with `spring.jpa.open-in-view=false`
 
+## Environment Variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `8083` | Server port |
+| `DB_URL` | `jdbc:mysql://localhost:3306/orderservice` | MySQL JDBC URL |
+| `DB_USERNAME` | `root` | Database username |
+| `DB_PASSWORD` | `password` | Database password |
+| `KAFKA_BOOTSTRAP_SERVERS` | `localhost:9092` | Kafka broker address |
+| `ISSUER_URI` | `http://localhost:8081` | OAuth2 issuer for JWT validation |
+
 ## Local Development
 
 ### Prerequisites
